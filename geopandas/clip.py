@@ -192,7 +192,9 @@ def clip(gdf, clip_obj):
         >>> sa_capitals.shape
         (12, 2)
     """
-    if not isinstance(gdf, (gpd.GeoDataFrame, gpd.GeoSeries)) and isinstance(clip_obj, (gpd.GeoDataFrame, gpd.GeoSeries)):
+    if not isinstance(gdf, (gpd.GeoDataFrame, gpd.GeoSeries)) and isinstance(
+        clip_obj, (gpd.GeoDataFrame, gpd.GeoSeries)
+    ):
         raise AttributeError(
             "Please make sure that your input and clip GeoDataFrames have a"
             " valid geometry column"

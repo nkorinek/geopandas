@@ -173,11 +173,12 @@ def test_clip_multipoly(multi_poly_gdf, single_rectangle_gdf):
 
     Also the bounds of the object should == the bounds of the clip object
     if they fully overlap (as they do in these fixtures). """
-    clip = gpd.clip(multi_poly_gdf, single_rectangle_gdf)
-    assert hasattr(clip, "geometry")
-    assert np.array_equal(clip.total_bounds, single_rectangle_gdf.total_bounds)
-    # 2 features should be returned with an attribute column
-    assert len(clip.attr) == 2
+    with pytest.raises(Warning):
+        clip = gpd.clip(multi_poly_gdf, single_rectangle_gdf)
+        assert hasattr(clip, "geometry")
+        assert np.array_equal(clip.total_bounds, single_rectangle_gdf.total_bounds)
+        # Assert the returned data is a geometry collection since there were sliver geoms
+        assert "GeometryCollection" in clip.geom_type[0]
 
 
 def test_clip_single_multipolygon(buffered_locations, larger_single_rectangle_gdf):

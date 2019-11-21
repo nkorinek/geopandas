@@ -6,7 +6,6 @@ import numpy as np
 from shapely.geometry import Polygon, Point, LineString
 import shapely
 import geopandas as gpd
-import geopandas.clip as cl
 
 
 @pytest.fixture

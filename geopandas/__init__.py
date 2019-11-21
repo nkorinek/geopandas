@@ -12,7 +12,7 @@ import geopandas.datasets  # noqa
 
 from geopandas._config import options  # noqa
 
-from geopandas.clip import clip # noqa
+from geopandas.clip import clip  # noqa
 
 # make the interactive namespace easier to use
 # for `from geopandas import *` demos.

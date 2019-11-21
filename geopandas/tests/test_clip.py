@@ -102,7 +102,9 @@ def multi_point(point_gdf):
     """ Create a multi-point GeoDataFrame. """
     multi_point = point_gdf.unary_union
     out_df = gpd.GeoDataFrame(
-        geometry=gpd.GeoSeries([multi_point, Point(2, 5), Point(-11, -14), Point(-10, -12)]),
+        geometry=gpd.GeoSeries(
+            [multi_point, Point(2, 5), Point(-11, -14), Point(-10, -12)]
+        ),
         crs={"init": "epsg:4326"},
     )
     out_df["attr"] = ["tree", "another tree", "shrub", "berries"]
@@ -115,7 +117,9 @@ def mixed_gdf():
     point = Point([(2, 3), (11, 4), (7, 2), (8, 9), (1, 13)])
     line = LineString([(1, 1), (2, 2), (3, 2), (5, 3), (12, 1)])
     poly = Polygon([(3, 4), (5, 2), (12, 2), (10, 5), (9, 7.5)])
-    gdf = gpd.GeoDataFrame([1, 2, 3], geometry=[point, line, poly], crs={"init": "epsg:4326"})
+    gdf = gpd.GeoDataFrame(
+        [1, 2, 3], geometry=[point, line, poly], crs={"init": "epsg:4326"}
+    )
     return gdf
 
 

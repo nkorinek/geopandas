@@ -155,10 +155,7 @@ def clip(gdf, clip_obj):
         | (geom_types == "MultiLineString")
     )
 
-    point_idx = np.asarray(
-        (geom_types == "Point")
-        | (geom_types == "MultiPoint")
-    )
+    point_idx = np.asarray((geom_types == "Point") | (geom_types == "MultiPoint"))
 
     points = gdf[point_idx]
     if not points.empty:

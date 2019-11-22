@@ -72,7 +72,9 @@ def two_line_gdf():
 def multi_poly_gdf(donut_geometry):
     """ Create a multi-polygon GeoDataFrame. """
     multi_poly = donut_geometry.unary_union
-    out_df = GeoDataFrame(geometry=gpd.GeoSeries(multi_poly), crs={"init": "epsg:4326"})
+    out_df = GeoDataFrame(
+        geometry=gpd.GeoSeries(multi_poly), crs={"init": "epsg:4326"}
+    )
     out_df = out_df.rename(columns={0: "geometry"}).set_geometry("geometry")
     out_df["attr"] = ["pool"]
     return out_df

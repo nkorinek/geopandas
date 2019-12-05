@@ -129,14 +129,10 @@ def clip(gdf, clip_obj, drop_slivers=False):
     """
     if not isinstance(gdf, (GeoDataFrame, GeoSeries)):
         raise TypeError(
-            "'gdf' should be GeoDataFrame or GeoSeries, got {}".format(
-                type(gdf)
-            )
+            "'gdf' should be GeoDataFrame or GeoSeries, got {}".format(type(gdf))
         )
 
-    if not isinstance(
-        clip_obj, (GeoDataFrame, GeoSeries, Polygon, MultiPolygon)
-    ):
+    if not isinstance(clip_obj, (GeoDataFrame, GeoSeries, Polygon, MultiPolygon)):
         raise TypeError(
             "'clip_obj' should be GeoDataFrame, GeoSeries or"
             "(Multi)Polygon, got {}".format(type(gdf))
@@ -155,17 +151,13 @@ def clip(gdf, clip_obj, drop_slivers=False):
         poly = clip_obj
 
     geom_types = gdf.geometry.type
-    poly_idx = np.asarray(
-        (geom_types == "Polygon") | (geom_types == "MultiPolygon")
-    )
+    poly_idx = np.asarray((geom_types == "Polygon") | (geom_types == "MultiPolygon"))
     line_idx = np.asarray(
         (geom_types == "LineString")
         | (geom_types == "LinearRing")
         | (geom_types == "MultiLineString")
     )
-    point_idx = np.asarray(
-        (geom_types == "Point") | (geom_types == "MultiPoint")
-    )
+    point_idx = np.asarray((geom_types == "Point") | (geom_types == "MultiPoint"))
 
     points = gdf[point_idx]
     if not points.empty:

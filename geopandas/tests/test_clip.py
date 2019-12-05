@@ -120,6 +120,15 @@ def mixed_gdf():
     return gdf
 
 
+@pytest.fixture
+def sliver_line():
+    """Create a line that will create a point when clipped."""
+    linea = LineString([(10, 5), (13, 5), (15, 5)])
+    lineb = LineString([(1, 1), (2, 2), (3, 2), (5, 3), (12, 1)])
+    gdf = GeoDataFrame([1, 2], geometry=[linea, lineb], crs={"init": "epsg:4326"})
+    return gdf
+
+
 def test_not_gdf(single_rectangle_gdf):
     """Non-GeoDataFrame inputs raise attribute errors."""
     with pytest.raises(TypeError):
@@ -270,3 +279,28 @@ def test_clip_with_polygon(single_rectangle_gdf):
     polygon = Polygon([(0, 0), (5, 12), (10, 0), (0, 0)])
     clip = gpd.clip(single_rectangle_gdf, polygon)
     assert hasattr(clip, "geometry") and clip.geom_type[0] == "Polygon"
+
+
+def test_clip_with_line_sliver(single_rectangle_gdf, sliver_line):
+    """Test clipping a line so that there is a sliver drops the sliver."""
+    clip = gpd.clip(sliver_line, single_rectangle_gdf, drop_slivers=True)
+    assert hasattr(clip, "geometry")
+    assert len(clip.geometry) == 1
+    # Assert returned data is a not geometry collection
+    assert (clip.geom_type == "LineString").any()
+
+
+def test_clip_line_keep_slivers(single_rectangle_gdf, sliver_line):
+    with pytest.warns(UserWarning):
+        clip = gpd.clip(sliver_line, single_rectangle_gdf)
+        warnings.warn("More geometry types were returned than were in the original ", UserWarning)
+        assert hasattr(clip, "geometry")
+        # Assert returned data is a geometry collection given sliver geoms
+        assert "Point" == clip.geom_type[0]
+        assert "LineString" == clip.geom_type[1]
+
+
+def test_warning_slivers_mixed(single_rectangle_gdf, mixed_gdf):
+    with pytest.warns(UserWarning):
+        gpd.clip(mixed_gdf, single_rectangle_gdf)
+        warnings.warn("Drop slivers was called on a mixed type GeoDataFrame.")

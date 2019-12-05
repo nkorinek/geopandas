@@ -293,7 +293,9 @@ def test_clip_with_line_sliver(single_rectangle_gdf, sliver_line):
 def test_clip_line_keep_slivers(single_rectangle_gdf, sliver_line):
     with pytest.warns(UserWarning):
         clip = gpd.clip(sliver_line, single_rectangle_gdf)
-        warnings.warn("More geometry types were returned than were in the original ", UserWarning)
+        warnings.warn(
+            "More geometry types were returned than were in the original ", UserWarning
+        )
         assert hasattr(clip, "geometry")
         # Assert returned data is a geometry collection given sliver geoms
         assert "Point" == clip.geom_type[0]

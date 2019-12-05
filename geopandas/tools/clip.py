@@ -129,10 +129,14 @@ def clip(gdf, clip_obj, drop_slivers=False):
     """
     if not isinstance(gdf, (GeoDataFrame, GeoSeries)):
         raise TypeError(
-            "'gdf' should be GeoDataFrame or GeoSeries, got {}".format(type(gdf))
+            "'gdf' should be GeoDataFrame or GeoSeries, got {}".format(
+                type(gdf)
+            )
         )
 
-    if not isinstance(clip_obj, (GeoDataFrame, GeoSeries, Polygon, MultiPolygon)):
+    if not isinstance(
+        clip_obj, (GeoDataFrame, GeoSeries, Polygon, MultiPolygon)
+    ):
         raise TypeError(
             "'clip_obj' should be GeoDataFrame, GeoSeries or"
             "(Multi)Polygon, got {}".format(type(gdf))
@@ -151,13 +155,17 @@ def clip(gdf, clip_obj, drop_slivers=False):
         poly = clip_obj
 
     geom_types = gdf.geometry.type
-    poly_idx = np.asarray((geom_types == "Polygon") | (geom_types == "MultiPolygon"))
+    poly_idx = np.asarray(
+        (geom_types == "Polygon") | (geom_types == "MultiPolygon")
+    )
     line_idx = np.asarray(
         (geom_types == "LineString")
         | (geom_types == "LinearRing")
         | (geom_types == "MultiLineString")
     )
-    point_idx = np.asarray((geom_types == "Point") | (geom_types == "MultiPoint"))
+    point_idx = np.asarray(
+        (geom_types == "Point") | (geom_types == "MultiPoint")
+    )
 
     points = gdf[point_idx]
     if not points.empty:
@@ -184,20 +192,28 @@ def clip(gdf, clip_obj, drop_slivers=False):
     lines = ["LineString", "MultiLineString", "LinearRing"]
     points = ["Point", "MultiPoint"]
 
-    poly_check_orig = gdf.geom_type.isin(polys).any()
-    lines_check_orig = gdf.geom_type.isin(lines).any()
-    points_check_orig = gdf.geom_type.isin(points).any()
+    # Check that the gdf submitted is not a multi type GeoDataFrame
+    orig_types_total = sum(
+        [
+            gdf.geom_type.isin(polys).any(),
+            gdf.geom_type.isin(lines).any(),
+            gdf.geom_type.isin(points).any(),
+        ]
+    )
 
-    orig_types_total = sum([poly_check_orig, lines_check_orig, points_check_orig])
+    # Check how many geometry types are in the clipped GeoDataFrame
+    clip_types_total = sum(
+        [
+            concat.geom_type.isin(polys).any(),
+            concat.geom_type.isin(lines).any(),
+            concat.geom_type.isin(points).any(),
+        ]
+    )
 
-    poly_check_clip = concat.geom_type.isin(polys).any()
-    lines_check_clip = concat.geom_type.isin(lines).any()
-    points_check_clip = concat.geom_type.isin(points).any()
-
-    clip_types_total = sum([poly_check_clip, lines_check_clip, points_check_clip])
-
+    # Check if the clipped geometry is a geometry collection
     geometry_collection = (concat.geom_type == "GeometryCollection").any()
 
+    # Check there aren't any additional geometries in the clipped GeoDataFrame
     more_types = orig_types_total < clip_types_total
 
     if orig_types_total > 1 and drop_slivers:

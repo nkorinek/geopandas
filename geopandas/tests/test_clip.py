@@ -211,7 +211,8 @@ def test_clip_multipoly_keep_geom_type(multi_poly_gdf, single_rectangle_gdf):
 
 
 def test_clip_multipoly_warning(multi_poly_gdf, single_rectangle_gdf):
-    """Test that a user warning is provided when clip outputs an extra geometry."""
+    """Test that a user warning is provided when clip outputs a feature that is of a geom
+    type that is different from the input geom."""
     with pytest.warns(UserWarning):
         gpd.clip(multi_poly_gdf, single_rectangle_gdf)
 
@@ -219,11 +220,9 @@ def test_clip_multipoly_warning(multi_poly_gdf, single_rectangle_gdf):
 def test_clip_single_multipoly_no_extra_geoms(
     buffered_locations, larger_single_rectangle_gdf
 ):
-    """Test clipping a multi poly with another poly no extra
-    geometry types are returned in this clip operation."""
+    """When clipping a multi-polygon feature, no additional geom types should be returned."""
     multi = buffered_locations.dissolve(by="type").reset_index()
     clip = gpd.clip(multi, larger_single_rectangle_gdf)
-
     assert hasattr(clip, "geometry") and clip.geom_type[0] == "Polygon"
 
 
@@ -278,7 +277,7 @@ def test_mixed_series(mixed_gdf, single_rectangle_gdf):
 
 
 def test_clip_warning_no_extra_geoms(buffered_locations, single_rectangle_gdf):
-    """Test a warning is provided to the user if no extra geometry types are found."""
+    """Test a user warning is provided if no new geometry types are found."""
     with pytest.warns(UserWarning):
         gpd.clip(buffered_locations, single_rectangle_gdf, True)
         warnings.warn(
@@ -295,7 +294,7 @@ def test_clip_with_polygon(single_rectangle_gdf):
 
 
 def test_clip_with_line_extra_geom(single_rectangle_gdf, sliver_line):
-    """Test clipping a line so that there is an extra geometry type generated."""
+    """When the output of a clipped line returns a geom collection, and keep_geom_type is True, no geometry collections should be returned."""
     clip = gpd.clip(sliver_line, single_rectangle_gdf, keep_geom_type=True)
     assert hasattr(clip, "geometry")
     assert len(clip.geometry) == 1
@@ -305,7 +304,7 @@ def test_clip_with_line_extra_geom(single_rectangle_gdf, sliver_line):
 
 def test_clip_line_keep_slivers(single_rectangle_gdf, sliver_line):
     """Test the correct warnings are raised if a point is returned
-    from a line only geometry type clip."""
+    from a line only geometry type."""
     with pytest.warns(UserWarning):
         clip = gpd.clip(sliver_line, single_rectangle_gdf)
         warnings.warn(

@@ -294,7 +294,8 @@ def test_clip_with_polygon(single_rectangle_gdf):
 
 
 def test_clip_with_line_extra_geom(single_rectangle_gdf, sliver_line):
-    """When the output of a clipped line returns a geom collection, and keep_geom_type is True, no geometry collections should be returned."""
+    """When the output of a clipped line returns a geom collection,
+    and keep_geom_type is True, no geometry collections should be returned."""
     clip = gpd.clip(sliver_line, single_rectangle_gdf, keep_geom_type=True)
     assert hasattr(clip, "geometry")
     assert len(clip.geometry) == 1

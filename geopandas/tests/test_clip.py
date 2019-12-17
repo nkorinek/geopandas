@@ -220,7 +220,8 @@ def test_clip_multipoly_warning(multi_poly_gdf, single_rectangle_gdf):
 def test_clip_single_multipoly_no_extra_geoms(
     buffered_locations, larger_single_rectangle_gdf
 ):
-    """When clipping a multi-polygon feature, no additional geom types should be returned."""
+    """When clipping a multi-polygon feature, no additional geom types
+    should be returned."""
     multi = buffered_locations.dissolve(by="type").reset_index()
     clip = gpd.clip(multi, larger_single_rectangle_gdf)
     assert hasattr(clip, "geometry") and clip.geom_type[0] == "Polygon"
@@ -318,7 +319,8 @@ def test_clip_line_keep_slivers(single_rectangle_gdf, sliver_line):
 
 
 def test_warning_extra_geoms_mixed(single_rectangle_gdf, mixed_gdf):
-    """Test the correct warnings are raised if keep_geom_type is called on a mixed GDF"""
+    """Test the correct warnings are raised if keep_geom_type
+    is called on a mixed GDF"""
     with pytest.warns(UserWarning):
         gpd.clip(mixed_gdf, single_rectangle_gdf)
         warnings.warn("keep_geom_type can not be called on a mixed type GeoDataFrame.")

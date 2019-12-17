@@ -281,7 +281,10 @@ def test_clip_warning_no_extra_geoms(buffered_locations, single_rectangle_gdf):
     """Test a warning is provided to the user if no extra geometry types are found."""
     with pytest.warns(UserWarning):
         gpd.clip(buffered_locations, single_rectangle_gdf, True)
-        warnings.warn("keep_geom_type was called when no extra geometry types existed.", UserWarning)
+        warnings.warn(
+            "keep_geom_type was called when no extra geometry types existed.",
+            UserWarning,
+        )
 
 
 def test_clip_with_polygon(single_rectangle_gdf):

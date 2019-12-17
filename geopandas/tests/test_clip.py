@@ -319,8 +319,8 @@ def test_clip_line_keep_slivers(single_rectangle_gdf, sliver_line):
 
 
 def test_warning_extra_geoms_mixed(single_rectangle_gdf, mixed_gdf):
-    """Test the correct warnings are raised if keep_geom_type
-    is called on a mixed GDF"""
+    """Test the correct warnings are raised if keep_geom_type is
+    called on a mixed GDF"""
     with pytest.warns(UserWarning):
         gpd.clip(mixed_gdf, single_rectangle_gdf)
         warnings.warn("keep_geom_type can not be called on a mixed type GeoDataFrame.")
